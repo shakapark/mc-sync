@@ -1,6 +1,5 @@
 #!/bin/bash
-if [ $INIT = true ]
-then
+if [ $INIT = true ]; then
   echo "Starting initialization"
   mc mirror --force --remove $SRC $DST > /dev/null 2>&1
   echo "Initialization done"
