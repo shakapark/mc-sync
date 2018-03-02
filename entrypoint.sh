@@ -20,7 +20,7 @@ function backup() {
 
 function init() {
   echo "Starting initialization"
-  mc mirror --force --remove $SRC $DST > /dev/null 2>&1
+  mc mirror --force --remove $SRC $DST 
   echo "Initialization done"
 }
 
