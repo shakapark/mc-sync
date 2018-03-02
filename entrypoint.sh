@@ -27,7 +27,7 @@ function init() {
 function sync() {
   while [ true ]; do
     echo "Starting synchronization"
-    mc mirror --overwrite --remove $SRC $DST > /dev/null 2>&1
+    mc mirror --overwrite --remove $SRC $DST
     echo "Synchronization done sleep 60"
     sleep 60
   done
