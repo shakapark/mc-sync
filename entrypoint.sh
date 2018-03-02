@@ -20,14 +20,14 @@ function backup() {
 
 function init() {
   echo "Starting initialization"
-  mc mirror --force --remove $SRC $DST 
+  mc mirror --overwrite --remove $SRC $DST 
   echo "Initialization done"
 }
 
 function sync() {
   while [ true ]; do
     echo "Starting synchronization"
-    mc mirror --force --remove $SRC $DST > /dev/null 2>&1
+    mc mirror --overwrite --remove $SRC $DST > /dev/null 2>&1
     echo "Synchronization done sleep 60"
     sleep 60
   done
