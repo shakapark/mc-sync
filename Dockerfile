@@ -5,7 +5,7 @@ RUN apk --no-cache add bash \
 RUN curl  https://dl.minio.io/client/mc/release/linux-amd64/mc -o /usr/bin/mc && \
     chmod +x /usr/bin/mc
 
-ADD sync.sh /
-RUN chmod a+x /sync.sh
+ADD entrypoint.sh /
+RUN chmod a+x /entrypoint.sh
 
-ENTRYPOINT ["/sync.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
