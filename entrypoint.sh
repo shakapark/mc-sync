@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 function backup() {
   echo "Starting Backup"
