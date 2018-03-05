@@ -28,7 +28,6 @@ function sync() {
   while [ true ]; do
     echo "Starting synchronization"
     mc mirror --overwrite --remove $SRC $DST
-    aws sync
     echo "Synchronization done sleep 60"
     sleep 60
   done
