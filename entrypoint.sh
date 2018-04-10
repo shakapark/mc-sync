@@ -10,7 +10,7 @@ function backup() {
   mc mb $DST/$DATE
   echo $?
 
-  BUCKETS=$(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 | cut -d / -f1 | tr " " "\n")
+  BUCKETS=($(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 | tr "/ " "\n"))
   for BUCKET in $BUCKETS
   do
     mc cp -r $SRC/$BUCKET $DST/$DATE
@@ -27,7 +27,7 @@ function backup() {
 
 function init() {
   echo "Starting initialization"
-  mc mirror --overwrite --remove $SRC $DST 
+  mc mirror --overwrite --remove $SRC $DST
   echo "Initialization done"
 }
 
@@ -39,6 +39,28 @@ function sync() {
     sleep 60
   done
 
+}
+
+function purge() {
+  echo "Starting Purge"
+
+  if [ "$BUCKETS" == "" ]; then
+    echo "BUCKETS is empty"
+    TAB=($(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 | tr "/ " "\n"))
+  else
+    echo "BUCKETS is not empty"
+    TAB=($(echo $BUCKETS | tr ',' "\n"))
+  fi
+
+  for BUCKET in "${TAB[@]}"
+  do
+    echo $BUCKET
+    mc rm --recursive --force --older-than=$RETENTION $SRC/$BUCKET/
+  done
+
+  echo "Purge Done"
+
+  exit 0
 }
 
 case $TYPE in
@@ -54,7 +76,11 @@ case $TYPE in
             sync
             ;;
 
+        purge)
+            purge
+            ;;
+
         *)
-            echo "TYPE: {backup|init|sync}"
+            echo "TYPE: {backup|init|sync|purge}"
             exit 1
 esac
