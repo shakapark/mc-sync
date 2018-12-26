@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function backup() {
+function backupMinio() {
   echo "Starting Backup"
 
   DATE=$(date -d "$RETENTION days ago" +"%d-%m-%Y")
@@ -23,6 +23,16 @@ function backup() {
   echo "Backup Done"
 
   exit 0
+}
+
+function backupAWS() {
+  echo "Starting Backup"
+
+  echo "Remove old folder"
+  DATE=$(date -d "$RETENTION days ago" +"%d-%m-%Y")
+  mc rm --recursive --force $DST/$DATE
+
+  sleep 600
 }
 
 function init() {
@@ -64,8 +74,11 @@ function purge() {
 }
 
 case $TYPE in
-        backup)
-            backup
+        backupMinio)
+            backupMinio
+            ;;
+        backupAWS)
+            backupAWS
             ;;
 
         init)
@@ -81,6 +94,6 @@ case $TYPE in
             ;;
 
         *)
-            echo "TYPE: {backup|init|sync|purge}"
+            echo "TYPE: {backupMinio|backupAWS|init|sync|purge}"
             exit 1
 esac
