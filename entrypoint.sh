@@ -10,7 +10,7 @@ function backupMinio() {
   mc mb $DST/$DATE
   echo $?
 
-  BUCKETS=($(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 | tr "/ " "\n"))
+  BUCKETS=($(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 )) #| tr "/ " "\n"))
   for BUCKET in $BUCKETS
   do
     mc cp -r $SRC/$BUCKET $DST/$DATE
@@ -32,6 +32,22 @@ function backupAWS() {
   DATE=$(date -d "$RETENTION days ago" +"%d-%m-%Y")
   mc rm --recursive --force $DST/$DATE
 
+  DATE=$(date +"%d-%m-%Y")
+  BUCKETS=($(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 )) #| tr "/ " "\n"))
+  echo $BUCKETS
+  for BUCKET in $BUCKETS
+  do
+    echo $BUCKET
+    mc cp -r $SRC/$BUCKET $DST/$DATE
+    if [ $? != 0 ]
+    then
+      exit 1
+    fi
+  done
+
+  echo "Backup Done"
+
+  exit 0  
   sleep 600
 }
 
