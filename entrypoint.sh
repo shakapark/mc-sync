@@ -10,10 +10,10 @@ function backupMinio() {
   mc mb $DST/$DATE
   echo $?
 
-  BUCKETS=($(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 )) #| tr "/ " "\n"))
+  BUCKETS=$(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 ) #| tr "/ " "\n"))
   for BUCKET in $BUCKETS
   do
-    mc cp -r $SRC/$BUCKET $DST/$DATE
+    mc cp -r $SRC/$BUCKET $DST/$DATE/$BUCKET
     if [ $? != 0 ]
     then
       exit 1
