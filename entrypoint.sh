@@ -33,17 +33,18 @@ function backupAWS() {
   mc rm --recursive --force $DST/$DATE
 
   DATE=$(date +"%d-%m-%Y")
-  BUCKETS=$(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 ) #| tr "/ " "\n"))
-  echo $BUCKETS
-  for BUCKET in $BUCKETS
-  do
-    echo $BUCKET
-    mc cp -r $SRC/$BUCKET $DST/$DATE/$BUCKET
-    if [ $? != 0 ]
-    then
-      exit 1
-    fi
-  done
+  mc cp -r $SRC $DST/$DATE
+  # BUCKETS=$(mc --json ls $SRC | grep -Eo '"key":.*?[^\\]",'|awk -F':' '{print $2}' | cut -d \" -f2 ) #| tr "/ " "\n"))
+  # echo $BUCKETS
+  # for BUCKET in $BUCKETS
+  # do
+  #   echo $BUCKET
+  #   mc cp -r $SRC $DST/$DATE
+  #   if [ $? != 0 ]
+  #   then
+  #     exit 1
+  #   fi
+  # done
 
   echo "Backup Done"
 
